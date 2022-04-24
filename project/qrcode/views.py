@@ -20,6 +20,7 @@ def qr():
     scale=4
     error="L"
     form = BasicQR()
+    format = "png"
 
     if form.validate_on_submit():
         url = form.qr_content.data
@@ -59,7 +60,7 @@ def qr():
                             version_dark=version_dark,
                             version_light=version_light,
                             quiet_zone=quiet_zone,
-                            border=border)
+                            border=border, format=format)
 
 
 

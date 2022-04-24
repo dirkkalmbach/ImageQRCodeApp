@@ -8,6 +8,6 @@ class BasicQR(FlaskForm):
     qr_content = StringField('Your QR-Code Content')
     size = StringField("Size")
     error = SelectField('Error Tolerance', choices=[('L', 'low'), ('M', 'medium'), ('Q', 'high'), ('H', 'very high')])
-    #scale = SelectField('Size', choices=[('cpp', 'C++'), ('py', 'Python'), ('text', 'Plain Text')])
+    format = SelectField('Image Format', choices=[('png', 'png'), ('svg', 'svg'), ('jpg', 'jpg')])
 
     submit = SubmitField('Create')
