@@ -1,7 +1,5 @@
-> A (semi-commercial) web app written in Flask to create QR-Codes. 
-
 # About
-A (semi-commercial) web app written in Flask to create QR-Codes and store user access data.
+A (semi-commercial) web app written in Flask to create QR-Codes. 
 
 # Project Organization  
 ## Branching Strategy  
