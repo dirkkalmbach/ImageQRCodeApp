@@ -1,6 +1,55 @@
 {% extends "base.html" %}
 {% block content %}
 <div>
-  <h1>qrcode/basic.html</h1>
+  <h1>qrcode/basicqr.html</h1>
 </div>
+
+  <h1>QR-Code <span class='xyz'></span> </h1>
+
+  
+
+  <p>
+    {% if qr_content %}
+      The url you entered is {{qr_content}}.
+      You can update it in the form below:
+    {% else %}
+      Please enter your qr_content in the form below:
+    {% endif %}
+    </p>
+    
+    <form method="POST">
+        {# This hidden_tag is a CSRF security feature. #}
+        {{ form.hidden_tag() }}
+        <div>{{ form.qr_content.label }} {{ form.qr_content(class='some-css-class') }}</div>
+        <div></div>{{ form.size.label }} {{ form.size(class='some-css-class') }}</div>
+        <div></div>{{ form.error.label }} {{ form.error(class='some-css-class') }}</div>
+        <div>{{ form.submit() }}</div>
+    </form>
+
+<h3>PNG</h3>
+<img src="{{ qrcode.png_data_uri(
+              data_light=data_light, data_dark=data_dark, 
+              dark=dark, light=light, alignment_dark=alignment_dark, alignment_light=alignment_light,
+              finder_light=finder_light, version_dark=version_dark, version_light=version_light,
+              quiet_zone=quiet_zone,
+              separator=separator,
+              border=border, 
+              scale=scale) }}"><br>
+<h3>SVG</h3>
+<img src="{{ qrcode.svg_data_uri(scale=scale) }}">
+<div>Content: {{qr_content}}</div>
+<div>Size: {{scale}}</div>
+
+<hr>
+<h3>Embedded SVG</h3>
+<div>{{ qrcode.svg_inline(
+        data_light=data_light, data_dark=data_dark, 
+        dark=dark, light=light, alignment_dark=alignment_dark, alignment_light=alignment_light,
+        finder_light=finder_light, version_dark=version_dark, version_light=version_light,
+        quiet_zone=quiet_zone,
+        separator=separator,
+        border=border, 
+        scale=scale
+        ) | safe }}</div>
+
 {% endblock %}
