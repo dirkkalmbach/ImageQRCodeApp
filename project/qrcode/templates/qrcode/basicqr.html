@@ -28,6 +28,12 @@
         <div>{{ form.submit() }}</div>
     </form>
 
+    <form method="POST">
+      {# This hidden_tag is a CSRF security feature. #}
+      {{ form_download.hidden_tag() }}
+      <div>{{ form_download.submit() }}</div>
+  </form>
+
 <h3>PNG</h3>
 <img src="{{ qrcode.png_data_uri(
               data_light=data_light, data_dark=data_dark, 

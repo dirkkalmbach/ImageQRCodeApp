@@ -11,3 +11,9 @@ class BasicQR(FlaskForm):
     format = SelectField('Image Format', choices=[('png', 'png'), ('svg', 'svg'), ('jpg', 'jpg')])
 
     submit = SubmitField('Create')
+
+class DownloadQR(FlaskForm):
+    '''
+    Form Class for Download QR.
+    '''
+    submit = SubmitField('Download')
