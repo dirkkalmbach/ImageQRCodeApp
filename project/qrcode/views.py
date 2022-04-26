@@ -1,9 +1,9 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, make_response 
 
 from project import db
 from project.qrcode.forms import BasicQR
 from werkzeug.utils import secure_filename
-
+from base64 import b64decode
 import os
 import io
 import segno
@@ -16,6 +16,7 @@ qrcode_blueprint = Blueprint('qrcode',
 
 @qrcode_blueprint.route('/basicqr', methods=['GET', 'POST'])
 def qr():
+    y="not downloaded"
     url="www.myexample.org"
     scale=4
     error="L"
@@ -26,7 +27,8 @@ def qr():
         url = form.qr_content.data
         scale = form.size.data
         error = form.error.data
-
+        format = form.format.data
+        
     if scale=="":
         scale=4
 
@@ -60,7 +62,7 @@ def qr():
                             version_dark=version_dark,
                             version_light=version_light,
                             quiet_zone=quiet_zone,
-                            border=border, format=format)
+                            border=border, format=format, y=y)
 
 
 
@@ -72,3 +74,19 @@ def image_qr():
 
     return render_template('imageqr.html')
 
+
+@qrcode_blueprint.route('/download/')
+def download_qr():  
+    #running this on qrcode/basicqr/download let qr-code download
+    url="www.myexample.org"
+    qr = segno.make(url, error='h')
+    data_uri = qr.png_data_uri( scale=4)
+    header, encoded = data_uri.split(",", 1)
+    encoded = b64decode(encoded)
+    # make downloadable
+    response = make_response(encoded)
+    cd = 'attachment; filename=myqr.png'
+    response.headers['Content-Disposition'] = cd 
+    response.mimetype='image/png'
+
+    return response
