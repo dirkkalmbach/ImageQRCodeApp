@@ -3,10 +3,14 @@
 <div>
   <h1>qrcode/basicqr.html</h1>
 </div>
+{% for mesg in get_flashed_messages() %}
+  <h3>{{ mesg }}</h3>
+{% endfor %}
 
   <h1>QR-Code<span class='xyz'></span> </h1>
-
-  
+  {% for i in y %}
+  <span>Downloaded? {{i}}</span>
+  {% endfor %}
 
   <p>
     {% if qr_content %}
@@ -23,16 +27,14 @@
         <div>{{ form.qr_content.label }} {{ form.qr_content(class='some-css-class', placeholder=qr_content) }}</div>
         <div></div>{{ form.size.label }} {{ form.size(class='some-css-class', placeholder=scale) }}</div>
         <div></div>{{ form.format.label }} {{ form.format(class='some-css-class', placeholder=format) }}</div>
-
         <div></div>{{ form.error.label }} {{ form.error(class='some-css-class', placeholder=error) }}</div>
         <div>{{ form.submit() }}</div>
     </form>
+    
+    <a href="{{ url_for('qrcode.download_qr') }}">Download QR</a>
 
-    <form method="POST">
-      {# This hidden_tag is a CSRF security feature. #}
-      {{ form_download.hidden_tag() }}
-      <div>{{ form_download.submit() }}</div>
-  </form>
+
+
 
 <h3>PNG</h3>
 <img src="{{ qrcode.png_data_uri(
