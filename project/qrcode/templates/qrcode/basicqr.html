@@ -1,6 +1,122 @@
 {% extends "base.html" %}
 {% block content %}
 <div>
-  <h1>qrcode/basic.html</h1>
+  <h1>qrcode/basicqr.html</h1>{{x}}
 </div>
+<h4>Flashed Messages:</h4>
+{% for mesg in get_flashed_messages() %}
+  <h5>{{ mesg }}</h5>
+{% endfor %}
+
+  <h1>QR-Code<span class='xyz'></span> </h1>
+  {% for i in y %}
+  <span>Downloaded? {{i}}</span>
+  {% endfor %}
+
+  <p>
+    {% if qr_content %}
+      The url you entered is {{qr_content}}.
+      You can update it in the form below:
+    {% else %}
+      Please enter your qr_content in the form below:
+    {% endif %}
+    </p>
+    
+    <form method="POST">
+        {# This hidden_tag is a CSRF security feature. #}
+        {{ form.hidden_tag() }}
+        <div>{{ form.qr_content.label }} {{ form.qr_content(class='some-css-class', placeholder=qr_content) }}</div>
+        <div>{{ form.size.label }} {{ form.size(class='some-css-class', placeholder=scale, size=6) }}</div>
+        <div>{{ form.format.label }} {{ form.format(class='some-css-class', placeholder=format) }}</div>
+        <div>{{ form.error.label }} {{ form.error(class='some-css-class', placeholder=error) }}</div>
+        <div>{{ form2.dark_color(class='some-css-class', placeholder=dark) }}  Pick a color for <strong>{{ form2.dark_color.label }}</strong> </div>
+        <div>{{ form2.light_color(class='some-css-class', placeholder=light) }}  Pick a color for <strong>{{ form2.light_color.label }}</strong> </div>
+        <div>{{ form2.data_light(class='some-css-class', placeholder=data_light) }}  Pick a color for <strong>{{ form2.data_light.label }}</strong> </div>
+        <div>{{ form2.data_dark(class='some-css-class', placeholder=data_dark) }}  Pick a color for <strong>{{ form2.data_dark.label }}</strong> </div>
+        <!-- <div>{{ form2.quiet_zone(class='some-css-class', placeholder=quiet_zone) }}  Pick a color for <strong>{{ form2.quiet_zone.label }}</strong> </div> -->
+        <!-- <div>{{ form.border.label }} {{ form.border(class='some-css-class', placeholder=border) }}</div> -->
+        <!-- <div>{{ form2.alignment_light(class='some-css-class', placeholder=alignment_light) }}  Pick a color for <strong>{{ form2.alignment_light.label }}</strong> </div> -->
+        <!-- <div>{{ form2.alignment_dark(class='some-css-class', placeholder=alignment_dark) }}  Pick a color for <strong>{{ form2.alignment_dark.label }}</strong> </div> -->
+        <!-- <div>{{ form.dpi.label }} {{ form.dpi(class='some-css-class', placeholder=72) }} dpi</div> -->
+        <div>{{ form.mask.label }} {{ form.mask(class='some-css-class', placeholder=mask) }}</div>
+
+        <div>{{ form2.finder_light(class='some-css-class', placeholder=finder_light) }}  Pick a color for <strong>{{ form2.finder_light.label }}</strong> </div>
+        <div>{{ form2.finder_dark(class='some-css-class', placeholder=finder_dark) }}  Pick a color for <strong>{{ form2.finder_dark.label }}</strong> </div>
+        <div>{{ form2.separator(class='some-css-class', placeholder=separator) }}  Pick a color for <strong>{{ form2.separator.label }}</strong> </div>
+        <div>{{ form2.version_dark(class='some-css-class', placeholder=version_dark) }}  Pick a color for <strong>{{ form2.version_dark.label }}</strong> </div>
+        <div>{{ form2.version_light(class='some-css-class', placeholder=version_light) }}  Pick a color for <strong>{{ form2.version_light.label }}</strong> </div>
+
+        <div>{{form.test.label}} {{ form.test(size=30, maxlength=50) }}</div>
+
+
+        <div>{{ form.submit() }}</div>
+    </form>
+
+
+
+    <a href="{{ url_for('qrcode.download_qr') }}">Download QR</a>
+
+
+
+{%if format=="png"%}
+<h3>PNG</h3>
+<img src="{{ qrcode.png_data_uri(
+              data_light=data_light, data_dark=data_dark, 
+              dark=dark, light=light, alignment_dark=alignment_dark, alignment_light=alignment_light,
+              finder_light=finder_light, finder_dark=finder_dark, 
+              version_dark=version_dark, version_light=version_light,
+              quiet_zone=quiet_zone,
+              separator=separator,
+              border=border, 
+              scale=scale) }}"><br>
+
+{%elif format=="svg"%}
+<h3>SVG</h3>
+<img src="{{ qrcode.svg_data_uri(data_light=data_light, data_dark=data_dark, 
+  dark=dark, light=light, alignment_dark=alignment_dark, alignment_light=alignment_light,
+  finder_light=finder_light, version_dark=version_dark, version_light=version_light,
+  quiet_zone=quiet_zone,
+  separator=separator,
+  border=border, 
+  scale=scale) }}">
+{% endif %}
+
+
+<hr>
+<h3>Embedded SVG</h3>
+<div>{{ qrcode.svg_inline(
+        data_light=data_light, data_dark=data_dark, 
+        dark=dark, light=light, alignment_dark=alignment_dark, alignment_light=alignment_light,
+        finder_light=finder_light, version_dark=version_dark, version_light=version_light,
+        quiet_zone=quiet_zone,
+        separator=separator,
+        border=border, 
+        scale=scale
+        ) | safe }}</div>
+
+
+<h2>Your chosen parameters:</h2>
+<ul>
+  <li>Content: {{qr_content}}</li>
+  <li>Format: {{format}}</li>
+  <li>Scale: {{scale}}</li>
+  <li>data_light: {{data_light}}</li>
+  <li>data_dark: {{data_dark}}</li>
+  <li>dark: {{dark}}</li>
+  <li>light: {{light}}</li>
+  <li>alignment_dark: {{alignment_dark}}</li>
+  <li>alignment_light: {{alignment_light}}</li>
+  <li>finder_light: {{finder_light}}</li>
+  <li>finder_dark: {{finder_dark}}</li>
+  <li>separator: {{separator}}</li>
+  <li>version_dark: {{version_dark}}</li>
+  <li>version_light: {{version_light}}</li>
+  <li>quiet_zone: {{quiet_zone}}</li>
+  <li>border: {{border}}</li>
+
+</ul>
+
+
 {% endblock %}
+
+

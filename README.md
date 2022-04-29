@@ -6,6 +6,7 @@ A (semi-commercial) web app written in Flask to create QR-Codes.
 ... is `GitHub flow`  
 ## Commit Messages  
 - 👨‍💻 = feat (a new feature)  
+- 🪲 = fix (a bug fix)
 - 📜 = docs (changes a documentation)  
 - 👷‍♀️ = refactor (refactoring production code)  
 - 🎬 = test (adding tests, refactoring test, no production code change)  

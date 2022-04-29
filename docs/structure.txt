@@ -26,8 +26,8 @@ FILE STRUCTURE
 │   │   ├───templates  
 │   │   │   └───userdata  
 │   │   │           qr.html  
-│   │   │           create-form.html  
-│   │   │           get-data.html  
+│   │   │           create.html  
+│   │   │           get.html  
 │   │  
 │   ├───static # CSS, JS, Images, Fonts, etc...  
 │   ├───templates  
