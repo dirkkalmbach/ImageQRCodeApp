@@ -10,8 +10,12 @@ class BasicQR(FlaskForm):
     size = StringField("Size")
     error = SelectField('Error Tolerance', choices=[('L', 'low'), ('M', 'medium'), ('Q', 'high'), ('H', 'very high')])
     format = SelectField('Image Format', choices=[('png', 'png'), ('svg', 'svg'), ('jpg', 'jpg')])
+    dpi = IntegerField("Resolution") #🧐 this field stops showing qr-codes
     border = IntegerField("Frame Size")
     submit = SubmitField(label='Create')
+    test = StringField("test")
+    mask = SelectField('Mask Format', choices=[("99", 'let computer find best pattern'),("0", 'pattern 00'), ("1", 'mask pattern 01'), ("2", 'mask pattern 10')])
+
 
 class ColoursForm(FlaskForm):
     """Used when editing scoreboard colours"""

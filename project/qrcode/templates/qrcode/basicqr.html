@@ -3,8 +3,9 @@
 <div>
   <h1>qrcode/basicqr.html</h1>{{x}}
 </div>
+<h4>Flashed Messages:</h4>
 {% for mesg in get_flashed_messages() %}
-  <h3>{{ mesg }}</h3>
+  <h5>{{ mesg }}</h5>
 {% endfor %}
 
   <h1>QR-Code<span class='xyz'></span> </h1>
@@ -25,7 +26,7 @@
         {# This hidden_tag is a CSRF security feature. #}
         {{ form.hidden_tag() }}
         <div>{{ form.qr_content.label }} {{ form.qr_content(class='some-css-class', placeholder=qr_content) }}</div>
-        <div>{{ form.size.label }} {{ form.size(class='some-css-class', placeholder=scale) }}</div>
+        <div>{{ form.size.label }} {{ form.size(class='some-css-class', placeholder=scale, size=6) }}</div>
         <div>{{ form.format.label }} {{ form.format(class='some-css-class', placeholder=format) }}</div>
         <div>{{ form.error.label }} {{ form.error(class='some-css-class', placeholder=error) }}</div>
         <div>{{ form2.dark_color(class='some-css-class', placeholder=dark) }}  Pick a color for <strong>{{ form2.dark_color.label }}</strong> </div>
@@ -36,17 +37,20 @@
         <!-- <div>{{ form.border.label }} {{ form.border(class='some-css-class', placeholder=border) }}</div> -->
         <!-- <div>{{ form2.alignment_light(class='some-css-class', placeholder=alignment_light) }}  Pick a color for <strong>{{ form2.alignment_light.label }}</strong> </div> -->
         <!-- <div>{{ form2.alignment_dark(class='some-css-class', placeholder=alignment_dark) }}  Pick a color for <strong>{{ form2.alignment_dark.label }}</strong> </div> -->
+        <!-- <div>{{ form.dpi.label }} {{ form.dpi(class='some-css-class', placeholder=72) }} dpi</div> -->
+        <div>{{ form.mask.label }} {{ form.mask(class='some-css-class', placeholder=mask) }}</div>
+
         <div>{{ form2.finder_light(class='some-css-class', placeholder=finder_light) }}  Pick a color for <strong>{{ form2.finder_light.label }}</strong> </div>
         <div>{{ form2.finder_dark(class='some-css-class', placeholder=finder_dark) }}  Pick a color for <strong>{{ form2.finder_dark.label }}</strong> </div>
         <div>{{ form2.separator(class='some-css-class', placeholder=separator) }}  Pick a color for <strong>{{ form2.separator.label }}</strong> </div>
         <div>{{ form2.version_dark(class='some-css-class', placeholder=version_dark) }}  Pick a color for <strong>{{ form2.version_dark.label }}</strong> </div>
         <div>{{ form2.version_light(class='some-css-class', placeholder=version_light) }}  Pick a color for <strong>{{ form2.version_light.label }}</strong> </div>
 
-        
-       
+        <div>{{form.test.label}} {{ form.test(size=30, maxlength=50) }}</div>
+
+
         <div>{{ form.submit() }}</div>
     </form>
-    <div>Dark Color: {{dark}}</div>
 
 
 

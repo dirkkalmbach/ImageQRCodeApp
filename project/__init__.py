@@ -21,5 +21,5 @@ Migrate(app,db)
 from project.qrcode.views import qrcode_blueprint
 from project.userdata.views import userdata_blueprint
 
-app.register_blueprint(qrcode_blueprint,url_prefix="/qrcode")
+app.register_blueprint(qrcode_blueprint,url_prefix="")
 app.register_blueprint(userdata_blueprint,url_prefix='/userdata')

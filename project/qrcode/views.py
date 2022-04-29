@@ -23,6 +23,8 @@ def qr():
     form = BasicQR()
     form2 = ColoursForm()
     format = "png"
+    dpi = 72
+    
 
     # COLOR SETTINGS
     # separator squares
@@ -45,12 +47,13 @@ def qr():
     version_dark="blue"
     version_light="blue"
 
-
     if form.validate_on_submit():
         url = form.qr_content.data
         scale = form.size.data
         error = form.error.data
         format = form.format.data
+        #dpi = form.dpi.data
+        #mask = int(form.mask.data) #! I dont know default (default is found by algo)
         dark = form2.dark_color.data
         light = form2.light_color.data
         data_light = form2.data_light.data
@@ -64,15 +67,15 @@ def qr():
         separator = form2.separator.data
         version_dark = form2.version_dark.data
         version_light = form2.version_light.data
-
+        test = form.test.data
+        flash(f"You typed {test} with datatype {type(test)} 🧐")
     if scale=="":
         scale=4
 
     qrcode = segno.make(url, micro=None, error=error)
-    #dict = {'url' : url, 'error' : 'h', 'scale' : int(scale)}
-    dict = {'url' : url, 'scale' : int(scale),
+    session['dict'] = {'url' : url, 'scale' : int(scale),
             'micro' : None,
-            'error' : error, 
+            'error' : error,
             'data_light' : data_light, 'data_dark' : data_dark,
             'dark' : dark, 'light' : light, 
             'alignment_dark' : alignment_dark, 'alignment_light' : alignment_light,
@@ -80,8 +83,9 @@ def qr():
             'separator' : separator,
             'version_dark' : version_dark, 'version_light' : version_light,
             'quiet_zone' : quiet_zone, 'border' : border,
-            'format' : format}
-    session['dict'] = dict
+            'format' : format, 
+            'dpi' : dpi,
+            }
         
     return render_template('basicqr.html', form=form, form2=form2, format=format,
                             qr_content=url, scale=int(scale), 
@@ -113,7 +117,7 @@ def download_qr():
     dict = session['dict']
     qr = segno.make(dict["url"], micro=dict['micro'], error=dict['error'])
     if dict["format"]=="png":
-        data_uri = qr.png_data_uri( 
+        data_uri = qr.png_data_uri( dpi=dict['dpi'],
             data_light=dict['data_light'], data_dark=dict['data_dark'],
             dark=dict['dark'], light=dict['light'], alignment_dark=dict['alignment_dark'], alignment_light=dict['alignment_light'],
             finder_light=dict['finder_light'], finder_dark=dict['finder_dark'], 
