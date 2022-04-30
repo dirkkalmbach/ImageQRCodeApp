@@ -9,4 +9,10 @@
   <h5>{{ mesg }}</h5>
 {% endfor %}
 
+<hr>
+<h4><a href="{{ url_for('qrcode.qr') }}">Create basic/colorful QR-Codes</a></h4>
+<h4><a href="{{ url_for('qrcode.wifi_qr') }}">Create QR-Codes to show your WiFi network</a></h4>
+<h4><a href="{{ url_for('qrcode.image_qr') }}">Create Image QR-Codes</a></h4>
+<hr>
+
 {% endblock %}

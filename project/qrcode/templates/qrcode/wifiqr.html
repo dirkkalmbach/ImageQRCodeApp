@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+  <h1>qrcode/wifiqr.html</h1>
+  <h4>Flashed Messages:</h4>
+  {% for mesg in get_flashed_messages() %}
+  <h5>{{ mesg }}</h5>
+{% endfor %}
+
+</div>
+<form method="POST">
+
+  <div>{{ form.ssid.label }} {{ form.ssid(class='some-css-class', placeholder=ssid) }}</div>
+  <div>{{ form.password.label }} {{ form.password(class='some-css-class', placeholder=password) }}</div>
+  <div>{{ form.security.label }} {{ form.security(class='some-css-class', placeholder=security) }}</div>
+  <div>{{ form.format.label }} {{ form.format(class='some-css-class', placeholder=format) }}</div>
+  <div>{{ form.size.label }} {{ form.size(class='some-css-class', placeholder=scale, size=6) }}</div>
+
+  <p>
+    <input type="submit" value="Create">
+  </p>
+</form>
+
+<a href="{{ url_for('qrcode.download_wifiqr') }}">Download QR</a>
+
+{%if format=="png"%}
+<h3>PNG</h3>
+<img src="{{ qr.png_data_uri( scale=scale) }}"><br>
+
+{%elif format=="svg"%}
+<h3>SVG</h3>
+<img src="{{  qr.svg_data_uri( scale=scale) }}">
+{% endif %}
+
+<h2>Your chosen parameters:</h2>
+<ul>
+  <li>SSID: {{ssid}}</li>
+  <li>Password: {{password}}</li>
+  <li>Security: {{security}}</li>
+  <li>Format: {{format}}</li>
+  <li>Scale: {{scale}}</li>
+  
+</ul>
+
+
+{% endblock %}
