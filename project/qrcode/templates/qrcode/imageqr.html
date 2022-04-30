@@ -2,5 +2,17 @@
 {% block content %}
 <div>
   <h1>qrcode/imageqr.html</h1>
+  <h4>Flashed Messages:</h4>
+  {% for mesg in get_flashed_messages() %}
+  <h5>{{ mesg }}</h5>
+{% endfor %}
+
 </div>
+<form method="POST">
+  {# This hidden_tag is a CSRF security feature. #}
+  {{ form.hidden_tag() }}
+  <p>
+    <input type="submit" value="Add">
+  </p>
+</form>
 {% endblock %}

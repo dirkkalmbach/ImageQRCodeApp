@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, SubmitField, SelectField
+from wtforms import StringField, IntegerField, SubmitField, SelectField, RadioField
 from wtforms.widgets.html5 import ColorInput
+from wtforms.validators import InputRequired, Length
 
 class BasicQR(FlaskForm):
     '''
@@ -15,6 +16,15 @@ class BasicQR(FlaskForm):
     submit = SubmitField(label='Create')
     test = StringField("test")
     mask = SelectField('Mask Format', choices=[("99", 'let computer find best pattern'),("0", 'pattern 00'), ("1", 'mask pattern 01'), ("2", 'mask pattern 10')])
+    ssid = StringField('SSID', validators=[InputRequired(),
+                                             Length(min=10, max=100)])
+    password = StringField('password', validators=[InputRequired(),
+                                             Length(min=4, max=63)])
+    security = SelectField('Security', choices=[("WPA", 'WPA'),("WEP", 'WEP'), ("nopass", "I don't know")])
+
+    level = RadioField('Level',
+                       choices=['Beginner', 'Intermediate', 'Advanced'],
+                       validators=[InputRequired()])
 
 
 class ColoursForm(FlaskForm):

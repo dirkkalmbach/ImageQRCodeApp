@@ -7,6 +7,7 @@ from base64 import b64decode
 import os
 import io
 import segno
+from segno import helpers
 
 
 qrcode_blueprint = Blueprint('qrcode',
@@ -47,7 +48,7 @@ def qr():
     version_dark="blue"
     version_light="blue"
 
-    if form.validate_on_submit():
+    if form.is_submitted():
         url = form.qr_content.data
         scale = form.size.data
         error = form.error.data
@@ -101,13 +102,77 @@ def qr():
 
 
 
+@qrcode_blueprint.route('/wifiqr', methods=['GET', 'POST'])
+def wifi_qr():
+    flash("not")
+    form = BasicQR()
+    ssid = "MYWIFINAME"
+    password = "***********"
+    security = "WPA"
+    scale = 4
+    format="png"
+    if form.is_submitted():
+        ssid = form.ssid.data
+        password = form.password.data
+        security = form.security.data
+        format = form.format.data
+        scale = form.size.data
+        flash("pressed")
+    if scale=="":
+        scale=4
+    
+    session['dict'] = {'ssid' : ssid, 'scale' : int(scale),
+        'micro' : None,
+        'password' : password,
+        'security' : security,
+        'format' : format, 
+        }
 
+    config = helpers.make_wifi_data(ssid=ssid, password=password, security='WPA')
+    qr = segno.make(config, error='h')
+    return render_template('wifiqr.html', form=form, qr=qr, ssid=ssid, password=password, security=security, scale=int(scale), format=format)
 
 
 @qrcode_blueprint.route('/imageqr', methods=['GET', 'POST'])
 def image_qr():
+    flash("not")
+    form = BasicQR()
+    if form.is_submitted():
+        flash("pressed button")
+    return render_template('imageqr.html', form=form)
 
-    return render_template('imageqr.html')
+@qrcode_blueprint.route('/download-wifiqr/')
+def download_wifiqr():  
+    #running this on qrcode/basicqr/download let qr-code download
+    #url="www.myexample.org"
+    dict = session['dict']
+    config = helpers.make_wifi_data(ssid=dict['ssid'], password=dict['password'], security=dict['security'])
+    qr = segno.make(config, error='h')
+
+    if dict["format"]=="png":
+        data_uri = qr.png_data_uri( 
+            scale=dict['scale'])
+        header, encoded = data_uri.split(",", 1)
+        encoded = b64decode(encoded)
+        # make downloadable
+        response = make_response(encoded)
+        cd = 'attachment; filename=mywifiqr.png'
+        response.headers['Content-Disposition'] = cd 
+        response.mimetype='image/png'
+    elif dict["format"]=="svg":
+        data_uri = qr.png_data_uri( 
+                scale=dict['scale'])
+        header, encoded = data_uri.split(",", 1)
+        encoded = b64decode(encoded)
+        # make downloadable
+        response = make_response(encoded)
+        cd = 'attachment; filename=mywifiqr.svg'
+        response.headers['Content-Disposition'] = cd 
+        response.mimetype='image/svg'
+    else:
+        pass #throw an error
+
+    return response
 
 
 @qrcode_blueprint.route('/download/')
