@@ -104,20 +104,21 @@ def qr():
 
 @qrcode_blueprint.route('/wifiqr', methods=['GET', 'POST'])
 def wifi_qr():
-    flash("not")
     form = BasicQR()
     ssid = "MYWIFINAME"
     password = "***********"
     security = "WPA"
     scale = 4
     format="png"
+    logo="None"
     if form.is_submitted():
         ssid = form.ssid.data
         password = form.password.data
         security = form.security.data
         format = form.format.data
         scale = form.size.data
-        flash("pressed")
+        logo = form.wifi_logo.data
+        flash(logo)
     if scale=="":
         scale=4
     

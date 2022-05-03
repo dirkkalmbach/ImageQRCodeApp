@@ -15,7 +15,23 @@
   <div>{{ form.security.label }} {{ form.security(class='some-css-class', placeholder=security) }}</div>
   <div>{{ form.format.label }} {{ form.format(class='some-css-class', placeholder=format) }}</div>
   <div>{{ form.size.label }} {{ form.size(class='some-css-class', placeholder=scale, size=6) }}</div>
+  <!-- <div>{{ form.wifi_logo.label }} {{ form.wifi_logo(class='some-css-class', placeholder=wifi_logo, size=6) }}</div> -->
+  
+  <!-- WiFi-Logo Selector -->
+  <div>
+  <p>Select background image:</p>
 
+  {% for subfield in form.wifi_logo %}
+  {% if subfield.data=="None"%}
+    <div> <p>{{subfield.data}}</p> </div>
+  {% else %}
+  <div>{{subfield}}{{subfield.placeholder=wifi_logo}}
+    <p>{{subfield.label}}</p><img src="{{url_for('static', filename="image/logo/wifi/"+subfield.data)}}" width="5%">
+  </div>
+  {% endif %}
+  {% endfor %}
+  
+</div>
   <p>
     <input type="submit" value="Create">
   </p>

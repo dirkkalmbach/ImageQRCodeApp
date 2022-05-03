@@ -25,6 +25,9 @@ class BasicQR(FlaskForm):
     level = RadioField('Level',
                        choices=['Beginner', 'Intermediate', 'Advanced'],
                        validators=[InputRequired()])
+    wifi_logo = RadioField('Logo', 
+                            choices=[('None','None'), ('wifi_1.jpg',''), ('wifi_2.png',''), ('wifi_3.jpg',''), ('wifi_4.png','')],
+                            default='None')
 
 
 class ColoursForm(FlaskForm):
