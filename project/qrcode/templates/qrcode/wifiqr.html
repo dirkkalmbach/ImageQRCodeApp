@@ -23,10 +23,10 @@
 
   {% for subfield in form.wifi_logo %}
   {% if subfield.data=="None"%}
-    <div> <p>{{subfield.data}}</p> </div>
+    <div> <p>{{subfield.data}}</p></div>
   {% else %}
-  <div>{{subfield}}{{subfield.placeholder=wifi_logo}}
-    <p>{{subfield.label}}</p><img src="{{url_for('static', filename="image/logo/wifi/"+subfield.data)}}" width="5%">
+  <div>{{subfield}}
+    <p>{{subfield.label}}</p><img src="{{url_for('static', filename='image/logo/wifi/'+subfield.data)}}" width="5%">
   </div>
   {% endif %}
   {% endfor %}
@@ -41,11 +41,14 @@
 
 {%if format=="png"%}
 <h3>PNG</h3>
-<img src="{{ qr.png_data_uri( scale=scale) }}"><br>
+{% if wifi_qr==None %}
+  <img src="{{ qr.png_data_uri( scale=scale) }}"><br>
+{% else %}
+<img src="{{  url_for('static', filename=wifi_qr) }}" alt="WiFi-QR-Code with WiFi Logo"><br>
+{% endif %}
 
 {%elif format=="svg"%}
 <h3>SVG</h3>
-<img src="{{  qr.svg_data_uri( scale=scale) }}">
 {% endif %}
 
 <h2>Your chosen parameters:</h2>

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, make_response, session, request, flash
 
-from project import db
+from project import db, app
 from project.qrcode.forms import BasicQR, ColoursForm
 from werkzeug.utils import secure_filename
 from base64 import b64decode
@@ -8,6 +8,7 @@ import os
 import io
 import segno
 from segno import helpers
+import time
 
 
 qrcode_blueprint = Blueprint('qrcode',
@@ -104,6 +105,7 @@ def qr():
 
 @qrcode_blueprint.route('/wifiqr', methods=['GET', 'POST'])
 def wifi_qr():
+    #flash(app.root_path)
     form = BasicQR()
     ssid = "MYWIFINAME"
     password = "***********"
@@ -116,9 +118,9 @@ def wifi_qr():
         password = form.password.data
         security = form.security.data
         format = form.format.data
-        scale = form.size.data
+        scale = int(form.size.data)
         logo = form.wifi_logo.data
-        flash(logo)
+        #flash(logo)
     if scale=="":
         scale=4
     
@@ -131,7 +133,16 @@ def wifi_qr():
 
     config = helpers.make_wifi_data(ssid=ssid, password=password, security='WPA')
     qr = segno.make(config, error='h')
-    return render_template('wifiqr.html', form=form, qr=qr, ssid=ssid, password=password, security=security, scale=int(scale), format=format)
+    target_name=None
+    if logo != "None":
+        logo_path = os.path.join(app.root_path, 'static', 'image', 'logo', 'wifi', logo)
+        target_name = str(round(time.time() )) + ".png" #URI
+        target_path = os.path.join(app.root_path, 'static', 'TEMP', target_name)
+        # save qr to static/TEMP
+        qr.to_artistic(background=logo_path, target=target_path, scale=scale)
+        target_name=os.path.join("TEMP", target_name)
+    flash(target_name)
+    return render_template('wifiqr.html', form=form, qr=qr, ssid=ssid, password=password, security=security, scale=int(scale), format=format, wifi_qr=target_name)
 
 
 @qrcode_blueprint.route('/imageqr', methods=['GET', 'POST'])
@@ -149,6 +160,7 @@ def download_wifiqr():
     dict = session['dict']
     config = helpers.make_wifi_data(ssid=dict['ssid'], password=dict['password'], security=dict['security'])
     qr = segno.make(config, error='h')
+    logo = os.path.join(DIR, "logo", "wifi", "WiFi2.png")
 
     if dict["format"]=="png":
         data_uri = qr.png_data_uri( 
