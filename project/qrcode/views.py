@@ -118,12 +118,12 @@ def wifi_qr():
         password = form.password.data
         security = form.security.data
         format = form.format.data
-        scale = int(form.size.data)
+        scale = form.size.data
         logo = form.wifi_logo.data
         #flash(logo)
     if scale=="":
         scale=4
-    
+    flash(logo)
     session['dict'] = {'ssid' : ssid, 'scale' : int(scale),
         'micro' : None,
         'password' : password,
@@ -139,9 +139,9 @@ def wifi_qr():
         target_name = str(round(time.time() )) + ".png" #URI
         target_path = os.path.join(app.root_path, 'static', 'TEMP', target_name)
         # save qr to static/TEMP
-        qr.to_artistic(background=logo_path, target=target_path, scale=scale)
+        qr.to_artistic(background=logo_path, target=target_path, scale=int(scale))
         target_name=os.path.join("TEMP", target_name)
-    flash(target_name)
+    #flash(target_name)
     return render_template('wifiqr.html', form=form, qr=qr, ssid=ssid, password=password, security=security, scale=int(scale), format=format, wifi_qr=target_name)
 
 
