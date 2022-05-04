@@ -23,7 +23,7 @@
 
   {% for subfield in form.wifi_logo %}
   {% if subfield.data=="None"%}
-    <div> <p>{{subfield.data}}</p></div>
+    <div>{{subfield}}<p>{{subfield.data}}</p></div>
   {% else %}
   <div>{{subfield}}
     <p>{{subfield.label}}</p><img src="{{url_for('static', filename='image/logo/wifi/'+subfield.data)}}" width="5%">
