@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, make_response, session, request, flash
+from flask import Blueprint, render_template, redirect, url_for, make_response, session, request, flash, send_file, send_from_directory
 
 from project import db, app
 from project.qrcode.forms import BasicQR, ColoursForm
@@ -123,7 +123,7 @@ def wifi_qr():
         #flash(logo)
     if scale=="":
         scale=4
-    flash(logo)
+    #flash(logo)
     session['dict'] = {'ssid' : ssid, 'scale' : int(scale),
         'micro' : None,
         'password' : password,
@@ -140,8 +140,8 @@ def wifi_qr():
         target_path = os.path.join(app.root_path, 'static', 'TEMP', target_name)
         # save qr to static/TEMP
         qr.to_artistic(background=logo_path, target=target_path, scale=int(scale))
-        target_name=os.path.join("TEMP", target_name)
-    #flash(target_name)
+        #target_name=os.path.join("TEMP", target_name)
+        #flash(target_name)
     return render_template('wifiqr.html', form=form, qr=qr, ssid=ssid, password=password, security=security, scale=int(scale), format=format, wifi_qr=target_name)
 
 
@@ -160,34 +160,29 @@ def download_wifiqr():
     dict = session['dict']
     config = helpers.make_wifi_data(ssid=dict['ssid'], password=dict['password'], security=dict['security'])
     qr = segno.make(config, error='h')
-    logo = os.path.join(DIR, "logo", "wifi", "WiFi2.png")
-
-    if dict["format"]=="png":
-        data_uri = qr.png_data_uri( 
-            scale=dict['scale'])
-        header, encoded = data_uri.split(",", 1)
-        encoded = b64decode(encoded)
-        # make downloadable
-        response = make_response(encoded)
-        cd = 'attachment; filename=mywifiqr.png'
-        response.headers['Content-Disposition'] = cd 
-        response.mimetype='image/png'
-    elif dict["format"]=="svg":
-        data_uri = qr.png_data_uri( 
-                scale=dict['scale'])
-        header, encoded = data_uri.split(",", 1)
-        encoded = b64decode(encoded)
-        # make downloadable
-        response = make_response(encoded)
-        cd = 'attachment; filename=mywifiqr.svg'
-        response.headers['Content-Disposition'] = cd 
-        response.mimetype='image/svg'
-    else:
-        pass #throw an error
+    data_uri = qr.png_data_uri( 
+        scale=dict['scale'])
+    header, encoded = data_uri.split(",", 1)
+    encoded = b64decode(encoded)
+    # make downloadable
+    response = make_response(encoded)
+    cd = 'attachment; filename=mywifiqr.png'
+    response.headers['Content-Disposition'] = cd 
+    response.mimetype='image/png'
 
     return response
 
 
+#### DOWNLOAD WIFI-QR
+@qrcode_blueprint.route('/download/<path:filename>', methods=['GET', 'POST'])
+def download_file(filename):
+	#filename = "1651667101.png"
+	#path = os.path.join(app.root_path, 'static', 'TEMP', target_name)
+	logo = os.path.join(app.root_path, 'static', 'TEMP', "1651667101.png")
+	#return send_file(logo, as_attachment=True)
+	return send_from_directory(directory=os.path.join(app.root_path, 'static', 'TEMP'), filename=filename)
+
+##### DOWNLOAD QR
 @qrcode_blueprint.route('/download/')
 def download_qr():  
     #running this on qrcode/basicqr/download let qr-code download
@@ -232,3 +227,6 @@ def download_qr():
         pass #throw an error
 
     return response
+
+
+

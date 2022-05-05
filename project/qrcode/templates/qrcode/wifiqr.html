@@ -37,14 +37,21 @@
   </p>
 </form>
 
-<a href="{{ url_for('qrcode.download_wifiqr') }}">Download QR</a>
+<!-- Download qr with logo from file -->
+<h2>Download a file</h2>
+{% if wifi_qr==None %}
+  <p><a href="{{ url_for('qrcode.download_wifiqr') }}">Download QR</a></p>
+{% else %}
+  <p><a href="{{ url_for('qrcode.download_file', filename=wifi_qr) }}">Download QR</a></p>
+
+{% endif %}
 
 {%if format=="png"%}
 <h3>PNG</h3>
 {% if wifi_qr==None %}
   <img src="{{ qr.png_data_uri( scale=scale) }}"><br>
 {% else %}
-<img src="{{  url_for('static', filename=wifi_qr) }}" alt="WiFi-QR-Code with WiFi Logo"><br>
+<img src="{{  url_for('static', filename='TEMP/' + wifi_qr ) }}" alt="WiFi-QR-Code with WiFi Logo"><br>
 {% endif %}
 
 {%elif format=="svg"%}
